@@ -43,13 +43,8 @@ endif
 	$(GOTEST) -v -race ./... $(OUTPUT_OPTIONS)
 
 coverage: ## Run the tests of the project and export the coverage
-	$(GOTEST) -cover -covermode=count -coverprofile=profile.cov ./...
-	$(GOCMD) tool cover -func profile.cov
-ifeq ($(EXPORT_RESULT), true)
-	GO111MODULE=off go get -u github.com/AlekSi/gocov-xml
-	GO111MODULE=off go get -u github.com/axw/gocov/gocov
-	gocov convert profile.cov | gocov-xml > coverage.xml
-endif
+	$(GOTEST) -cover -covermode=count -coverprofile=coverage.cov ./...
+	$(GOCMD) tool cover -func coverage.cov
 
 ## Lint:
 lint: lint-go lint-dockerfile lint-yaml ## Run all available linters
