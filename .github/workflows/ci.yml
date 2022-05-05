@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '^1.18.0'
-      - run: make lint
+      - run: make lint-go
 
   Test:
     runs-on: ubuntu-latest
