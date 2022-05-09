@@ -22,6 +22,6 @@ func (h *allFlags) Handler(c echo.Context) error {
 	// - call goFF
 	// - return the results
 
-	//return c.JSON(http.StatusOK, h.monitoringService.Health())
+	// return c.JSON(http.StatusOK, h.monitoringService.Health())
 	return nil
 }

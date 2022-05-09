@@ -20,8 +20,7 @@ const banner = `
 █▀▄ ██▄ █▄▄ █▀█  █    █▀▀ █▀▄ █▄█ █ █  █ 
 
 High performance GO Feature Flag Relay Proxy
-_____________________________________________
-`
+_____________________________________________`
 
 func main() {
 	// TODO: should we print this banner ?
