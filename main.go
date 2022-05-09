@@ -19,7 +19,7 @@ const banner = `
 █▀█ █▀▀ █   ▄▀█ █▄█   █▀█ █▀█ █▀█ ▀▄▀ █▄█
 █▀▄ ██▄ █▄▄ █▀█  █    █▀▀ █▀▄ █▄█ █ █  █ 
 
-High performance GO Feature Flag Relay Proxy
+GO Feature Flag Relay Proxy
 _____________________________________________`
 
 func main() {
