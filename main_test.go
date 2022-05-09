@@ -1,7 +1,10 @@
 package main
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func Test_dummy(t *testing.T) {
-	main()
+	assert.Equal(t, "dummy", "dummy")
 }
