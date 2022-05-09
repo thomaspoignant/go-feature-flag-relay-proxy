@@ -26,3 +26,5 @@ vendor/
 *.cov
 coverage.xml
 bin/
+out/
+tmp/
