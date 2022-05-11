@@ -34,6 +34,10 @@ watch: ## Run the code with cosmtrek/air to have automatic reload on changes
 	$(eval PACKAGE_NAME=$(shell head -n 1 go.mod | cut -d ' ' -f2))
 	docker run -it --rm -w /go/src/$(PACKAGE_NAME) -v $(shell pwd):/go/src/$(PACKAGE_NAME) -p $(SERVICE_PORT):$(SERVICE_PORT) cosmtrek/air
 
+swagger: ## Build swagger documentation
+	$(GOCMD) install github.com/swaggo/swag/cmd/swag@latest
+	swag init --parseDependency --parseDepth 2
+
 ## Test:
 test: ## Run the tests of the project
 ifeq ($(EXPORT_RESULT), true)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 	ffclient "github.com/thomaspoignant/go-feature-flag"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/controller"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/service"
@@ -38,6 +39,7 @@ type Server struct {
 func (s *Server) init() {
 	s.echoInstance = echo.New()
 	s.echoInstance.HideBanner = true
+	s.echoInstance.Debug = true
 
 	// Middlewares
 	s.echoInstance.Use(middleware.Logger())
@@ -52,6 +54,7 @@ func (s *Server) init() {
 	// health Routes
 	s.echoInstance.GET("/health", cHealth.Handler)
 	s.echoInstance.GET("/info", cInfo.Handler)
+	s.echoInstance.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// GO feature flags routes
 	v1 := s.echoInstance.Group("/v1")
