@@ -7,7 +7,7 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/swaggo/echo-swagger v1.3.2
 	github.com/swaggo/swag v1.8.1
-	github.com/thomaspoignant/go-feature-flag v0.22.1
+	github.com/thomaspoignant/go-feature-flag v0.22.2
 )
 
 require (
