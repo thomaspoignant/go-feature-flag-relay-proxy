@@ -18,6 +18,12 @@ func NewHealth(monitoring service.Monitoring) Controller {
 }
 
 // Handler is the entry point for this API
+// @Summary      Health, status endpoint
+// @Description  Health is the status endpoint of the relay proxy, you should call it to check if the relay proxy is up.
+// @Tags         monitoring
+// @Produce      json
+// @Success      200  {object}   model.HealthResponse
+// @Router       /health [get]
 func (h *health) Handler(c echo.Context) error {
 	return c.JSON(http.StatusOK, h.monitoringService.Health())
 }

@@ -9,8 +9,12 @@ import (
 	"time"
 
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/api"
+	"github.com/thomaspoignant/go-feature-flag-relay-proxy/docs"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/service"
 )
+
+// version, releaseDate are override by the makefile during the build.
+var version = "localdev"
 
 const banner = `█▀▀ █▀█   █▀▀ █▀▀ ▄▀█ ▀█▀ █ █ █▀█ █▀▀   █▀▀ █   ▄▀█ █▀▀
 █▄█ █▄█   █▀  ██▄ █▀█  █  █▄█ █▀▄ ██▄   █▀  █▄▄ █▀█ █▄█
@@ -21,9 +25,30 @@ const banner = `█▀▀ █▀█   █▀▀ █▀▀ ▄▀█ 
 GO Feature Flag Relay Proxy
 _____________________________________________`
 
+// @title go-feature-flag relay proxy
+// @description Swagger for the go-feature-flag relay proxy.
+// @description
+// @description go-feature-flag relay proxy is using thomaspoignant/go-feature-flag to handle your feature flagging.
+// @description It is a proxy to your flags, you can get the values of your flags using APIs.
+// @contact.name GO feature flag relay proxy
+// @contact.url https://github.com/thomaspoignant/go-feature-flag-relay-proxy
+// @license.name MIT
+// @license.url https://github.com/thomaspoignant/go-feature-flag-relay-proxy/blob/main/LICENSE
+// @BasePath /
 func main() {
+	// TODO: options to implement
+	// - hideBanner
+	// - enableSwagger - default is false
+	// - debug mode for echo
+	// - fail on startup
+	// - HTTP port
+
 	// TODO: should we print this banner ?
 	fmt.Println(banner)
+
+	// Init swagger
+	docs.SwaggerInfo.Version = version
+	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s", "3000") // TODO: change host by the config
 
 	// Init services
 	goff, err := ffclient.New(
@@ -34,7 +59,7 @@ func main() {
 			Retriever: &ffclient.GithubRetriever{
 				RepositorySlug: "thomaspoignant/go-feature-flag",
 				Branch:         "main",
-				FilePath:       "examples/github/flags.yaml",
+				FilePath:       "testdata/flag-config.yaml",
 				Timeout:        3 * time.Second,
 			},
 		})
