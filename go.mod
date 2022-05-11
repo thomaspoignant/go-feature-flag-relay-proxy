@@ -59,5 +59,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
-
-replace github.com/thomaspoignant/go-feature-flag v0.22.1 => /Users/thomas.poignant/Documents/dev/external_project/go-feature-flag
