@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	ffclient "github.com/thomaspoignant/go-feature-flag"
-	"log"
-	"os"
+	"github.com/thomaspoignant/go-feature-flag-relay-proxy/log"
+	"go.uber.org/zap"
 	"time"
 
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/api"
@@ -43,6 +43,9 @@ func main() {
 	// - fail on startup
 	// - HTTP port
 
+	zapLog := log.InitLogger()
+	defer func() { _ = zapLog.Sync() }()
+
 	// TODO: should we print this banner ?
 	fmt.Println(banner)
 
@@ -53,9 +56,10 @@ func main() {
 	// Init services
 	goff, err := ffclient.New(
 		ffclient.Config{
-			PollingInterval: 10 * time.Second,
-			Logger:          log.New(os.Stdout, "", 0),
-			Context:         context.Background(),
+			StartWithRetrieverError: true,
+			PollingInterval:         10 * time.Second,
+			Logger:                  zap.NewStdLog(zapLog),
+			Context:                 context.Background(),
 			Retriever: &ffclient.GithubRetriever{
 				RepositorySlug: "thomaspoignant/go-feature-flag",
 				Branch:         "main",
@@ -71,7 +75,7 @@ func main() {
 	monitoringService := service.NewMonitoring(goff)
 
 	// Init API server
-	apiServer := api.New(api.ServerConfig{}, monitoringService, goff)
+	apiServer := api.New(api.ServerConfig{}, monitoringService, goff, zapLog)
 	apiServer.Start()
 	defer func() { _ = apiServer.Stop }()
 }

@@ -2,21 +2,26 @@ package api
 
 import (
 	"fmt"
+	"github.com/brpaz/echozap"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	ffclient "github.com/thomaspoignant/go-feature-flag"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/controller"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/service"
-	"log"
+	"go.uber.org/zap"
 )
 
 // New is used to create a new instance of the API server
-func New(config ServerConfig, monitoringService service.Monitoring, goFF *ffclient.GoFeatureFlag) Server {
+func New(config ServerConfig,
+	monitoringService service.Monitoring,
+	goFF *ffclient.GoFeatureFlag,
+	zapLog *zap.Logger) Server {
 	s := Server{
 		serverConfig:      config,
 		monitoringService: monitoringService,
 		goFF:              goFF,
+		zapLog:            zapLog,
 	}
 	s.init()
 	return s
@@ -33,16 +38,18 @@ type Server struct {
 	echoInstance      *echo.Echo
 	monitoringService service.Monitoring
 	goFF              *ffclient.GoFeatureFlag
+	zapLog            *zap.Logger
 }
 
 // init initialize the configuration of our API server (using echo)
 func (s *Server) init() {
 	s.echoInstance = echo.New()
 	s.echoInstance.HideBanner = true
+	s.echoInstance.HidePort = true
 	s.echoInstance.Debug = true
 
 	// Middlewares
-	s.echoInstance.Use(middleware.Logger())
+	s.echoInstance.Use(echozap.ZapLogger(s.zapLog))
 	s.echoInstance.Use(middleware.Recover())
 
 	// Init controllers
@@ -67,13 +74,20 @@ func (s *Server) Start() {
 	if s.serverConfig.Port == 0 {
 		s.serverConfig.Port = 3000
 	}
-	s.echoInstance.Logger.Fatal(s.echoInstance.Start(fmt.Sprintf(":%d", s.serverConfig.Port)))
+	address := fmt.Sprintf("0.0.0.0:%d", s.serverConfig.Port)
+
+	s.zapLog.Info("Starting go-feature-flag relay proxy ...", zap.String("address", address))
+
+	err := s.echoInstance.Start(address)
+	if err != nil {
+		s.zapLog.Fatal("impossible to start the proxy", zap.Error(err))
+	}
 }
 
 // Stop shutdown the API server
 func (s *Server) Stop() {
 	err := s.echoInstance.Close()
 	if err != nil {
-		log.Fatalf("impossible to stop go-feature-flag relay proxy %e", err)
+		s.zapLog.Fatal("impossible to stop go-feature-flag relay proxy", zap.Error(err))
 	}
 }
