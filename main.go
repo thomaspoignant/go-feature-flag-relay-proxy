@@ -2,15 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/api"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/config"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/docs"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/log"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/service"
 	"go.uber.org/zap"
-	"net/http"
-	"time"
 )
 
 // version, releaseDate are override by the makefile during the build.
@@ -50,7 +47,7 @@ func main() {
 	defer func() { _ = zapLog.Sync() }()
 
 	// Loading the configuration in viper
-	proxyConf, err := parseConfig()
+	proxyConf, err := config.ParseConfig()
 	if err != nil {
 		zapLog.Fatal("error while reading configuration", zap.Error(err))
 	}
@@ -82,32 +79,4 @@ func main() {
 	}, monitoringService, goff, zapLog)
 	apiServer.Start()
 	defer func() { _ = apiServer.Stop }()
-}
-
-// parseConfig is reading the configuration file
-func parseConfig() (*config.Config, error) {
-	// default values
-	viper.SetDefault("listen", "3000")
-	viper.SetDefault("host", "localhost")
-	viper.SetDefault("fileFormat", "yaml")
-
-	viper.SetDefault("retriever.timeout", int64(10*time.Second/time.Millisecond))
-	viper.SetDefault("retriever.method", http.MethodGet)
-	viper.SetDefault("retriever.body", "")
-
-	// TODO add more location + add flags from command line
-	viper.SetConfigName("config")
-	viper.AddConfigPath("./")
-	viper.AddConfigPath("./testdata/config/")
-	err := viper.ReadInConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	proxyConf := &config.Config{}
-	err = viper.Unmarshal(proxyConf)
-	if err != nil {
-		return nil, err
-	}
-	return proxyConf, nil
 }

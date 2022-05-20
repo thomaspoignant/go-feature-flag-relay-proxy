@@ -4,16 +4,19 @@ import "fmt"
 
 // ExporterConf contains all the field to configure an exporter
 type ExporterConf struct {
-	Kind        ExporterKind      `mapstructure:"kind"`
-	OutputDir   string            `mapstructure:"outputDir"`
-	Format      string            `mapstructure:"format"`
-	Filename    string            `mapstructure:"filename"`
-	CsvTemplate string            `mapstructure:"csvTemplate"`
-	Bucket      string            `mapstructure:"bucket"`
-	Path        string            `mapstructure:"path"`
-	EndpointURL string            `mapstructure:"endpointUrl"`
-	Secret      string            `mapstructure:"secret"`
-	Meta        map[string]string `mapstructure:"meta"`
+	Kind             ExporterKind      `mapstructure:"kind"`
+	OutputDir        string            `mapstructure:"outputDir"`
+	Format           string            `mapstructure:"format"`
+	Filename         string            `mapstructure:"filename"`
+	CsvTemplate      string            `mapstructure:"csvTemplate"`
+	Bucket           string            `mapstructure:"bucket"`
+	Path             string            `mapstructure:"path"`
+	EndpointURL      string            `mapstructure:"endpointUrl"`
+	Secret           string            `mapstructure:"secret"`
+	Meta             map[string]string `mapstructure:"meta"`
+	LogFormat        string            `mapstructure:"logFormat"`
+	FlushInterval    int64             `mapstructure:"flushInterval"`
+	MaxEventInMemory int64             `mapstructure:"maxEventInMemory"`
 }
 
 func (c *ExporterConf) IsValid() error {

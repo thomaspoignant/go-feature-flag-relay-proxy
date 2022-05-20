@@ -1,5 +1,54 @@
 package config
 
+import (
+	"github.com/spf13/viper"
+	"net/http"
+	"time"
+)
+
+// ParseConfig is reading the configuration file
+func ParseConfig() (*Config, error) {
+	setViperDefault()
+
+	// TODO add more location + add flags from command line
+	viper.SetConfigName("config")
+	viper.AddConfigPath("./")
+	viper.AddConfigPath("./testdata/config/")
+	err := viper.ReadInConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	proxyConf := &Config{}
+	err = viper.Unmarshal(proxyConf)
+	if err != nil {
+		return nil, err
+	}
+	return proxyConf, nil
+}
+
+// setViperDefault will set default values for the configuration
+func setViperDefault() {
+	viper.SetDefault("listen", "1031")
+	viper.SetDefault("host", "localhost")
+	viper.SetDefault("fileFormat", "yaml")
+
+	// retriever
+	viper.SetDefault("retriever.timeout", int64(10*time.Second/time.Millisecond))
+	viper.SetDefault("retriever.method", http.MethodGet)
+	viper.SetDefault("retriever.body", "")
+
+	// exporter
+	viper.SetDefault("exporter.format", "JSON")
+	viper.SetDefault("exporter.logFormat",
+		"[{{ .FormattedDate}}] user=\"{{ .UserKey}}\", flag=\"{{ .Key}}\", value=\"{{ .Value}}\"")
+	viper.SetDefault("exporter.filename", "flag-variation-{{ .Hostname}}-{{ .Timestamp}}.{{ .Format}}")
+	viper.SetDefault("exporter.csvTemplate",
+		"{ .Kind}};{{ .ContextKind}};{{ .UserKey}};{{ .CreationDate}};{{ .Key}};{{ .Variation}};{{ .Value}};{{ .Default}}\\n")
+	viper.SetDefault("exporter.flushInterval", 60000)
+	viper.SetDefault("exporter.maxEventInMemory", 100000)
+}
+
 type Config struct {
 	// ListenPort (optional) is the port we are using to start the proxy
 	ListenPort int `mapstructure:"listen"`
@@ -39,11 +88,10 @@ type Config struct {
 
 // IsValid contains all the validation of the configuration.
 func (c *Config) IsValid() error {
-	if c.Retriever != nil {
-		if err := c.Retriever.IsValid(); err != nil {
-			return err
-		}
+	if err := c.Retriever.IsValid(); err != nil {
+		return err
 	}
+	// Exporter is optional
 	if c.Exporter != nil {
 		if err := c.Exporter.IsValid(); err != nil {
 			return err
