@@ -31,13 +31,23 @@ type Config struct {
 	StartWithRetrieverError bool `mapstructure:"startWithRetrieverError"`
 
 	// Retriever is the configuration on how to retrieve the file
-	Retriever RetrieverConf `mapstructure:"retriever"`
+	Retriever *RetrieverConf `mapstructure:"retriever"`
+
+	// Exporter is the configuration on how to export data
+	Exporter *ExporterConf `mapstructure:"exporter"`
 }
 
 // IsValid contains all the validation of the configuration.
 func (c *Config) IsValid() error {
-	if err := c.Retriever.IsValid(); err != nil {
-		return err
+	if c.Retriever != nil {
+		if err := c.Retriever.IsValid(); err != nil {
+			return err
+		}
+	}
+	if c.Exporter != nil {
+		if err := c.Exporter.IsValid(); err != nil {
+			return err
+		}
 	}
 	return nil
 }

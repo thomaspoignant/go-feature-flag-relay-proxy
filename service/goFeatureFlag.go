@@ -29,10 +29,10 @@ func NewGoFeatureFlagClient(proxyConf *config.Config, logger *zap.Logger) (*ffcl
 	return ffclient.New(f)
 }
 
-func initRetriever(c config.RetrieverConf) (ffclient.Retriever, error) {
+func initRetriever(c *config.RetrieverConf) (ffclient.Retriever, error) {
 	// Conversions
 	switch c.Kind {
-	case config.GitHub:
+	case config.GitHubRetriever:
 		return &ffclient.GithubRetriever{
 			RepositorySlug: c.RepositorySlug,
 			Branch:         c.Branch,
@@ -41,18 +41,18 @@ func initRetriever(c config.RetrieverConf) (ffclient.Retriever, error) {
 			Timeout:        time.Duration(c.Timeout) * time.Millisecond,
 		}, nil
 
-	case config.File:
+	case config.FileRetriever:
 		return &ffclient.FileRetriever{
 			Path: c.Path,
 		}, nil
 
-	case config.S3:
+	case config.S3Retriever:
 		return &ffclient.S3Retriever{
 			Bucket: c.Bucket,
 			Item:   c.Item,
 		}, nil
 
-	case config.HTTP:
+	case config.HTTPRetriever:
 		return &ffclient.HTTPRetriever{
 			URL:     c.URL,
 			Method:  c.HTTPMethod,
@@ -61,7 +61,7 @@ func initRetriever(c config.RetrieverConf) (ffclient.Retriever, error) {
 			Timeout: time.Duration(c.Timeout) * time.Millisecond,
 		}, nil
 
-	case config.GoogleStorage:
+	case config.GoogleStorageRetriever:
 		return &ffclient.GCStorageRetriever{
 			Bucket: c.Bucket,
 			Object: c.Object,

@@ -44,7 +44,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 			errValue: "invalid retriever: kind \"invalid\" is not supported",
 		},
 		{
-			name: "kind GitHub without repo slug",
+			name: "kind GitHubRetriever without repo slug",
 			fields: fields{
 				Kind: "github",
 			},
@@ -52,7 +52,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 			errValue: "invalid retriever: no \"repositorySlug\" property found for kind \"github\"",
 		},
 		{
-			name: "kind S3 without item",
+			name: "kind S3Retriever without item",
 			fields: fields{
 				Kind: "s3",
 			},
@@ -60,7 +60,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 			errValue: "invalid retriever: no \"item\" property found for kind \"s3\"",
 		},
 		{
-			name: "kind HTTP without URL",
+			name: "kind HTTPRetriever without URL",
 			fields: fields{
 				Kind: "http",
 			},
@@ -76,7 +76,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 			errValue: "invalid retriever: no \"object\" property found for kind \"googleStorage\"",
 		},
 		{
-			name: "kind GitHub without path",
+			name: "kind GitHubRetriever without path",
 			fields: fields{
 				Kind:           "github",
 				RepositorySlug: "thomaspoignant/go-feature-flag",

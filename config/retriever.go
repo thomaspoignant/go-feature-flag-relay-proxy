@@ -24,22 +24,22 @@ func (c *RetrieverConf) IsValid() error {
 	if err := c.Kind.IsValid(); err != nil {
 		return err
 	}
-	if c.Kind == GitHub && c.RepositorySlug == "" {
+	if c.Kind == GitHubRetriever && c.RepositorySlug == "" {
 		return fmt.Errorf("invalid retriever: no \"repositorySlug\" property found for kind \"%s\"", c.Kind)
 	}
-	if c.Kind == S3 && c.Item == "" {
+	if c.Kind == S3Retriever && c.Item == "" {
 		return fmt.Errorf("invalid retriever: no \"item\" property found for kind \"%s\"", c.Kind)
 	}
-	if c.Kind == HTTP && c.URL == "" {
+	if c.Kind == HTTPRetriever && c.URL == "" {
 		return fmt.Errorf("invalid retriever: no \"url\" property found for kind \"%s\"", c.Kind)
 	}
-	if c.Kind == GoogleStorage && c.Object == "" {
+	if c.Kind == GoogleStorageRetriever && c.Object == "" {
 		return fmt.Errorf("invalid retriever: no \"object\" property found for kind \"%s\"", c.Kind)
 	}
-	if (c.Kind == GitHub || c.Kind == File) && c.Path == "" {
+	if (c.Kind == GitHubRetriever || c.Kind == FileRetriever) && c.Path == "" {
 		return fmt.Errorf("invalid retriever: no \"path\" property found for kind \"%s\"", c.Kind)
 	}
-	if (c.Kind == S3 || c.Kind == GoogleStorage) && c.Bucket == "" {
+	if (c.Kind == S3Retriever || c.Kind == GoogleStorageRetriever) && c.Bucket == "" {
 		return fmt.Errorf("invalid retriever: no \"bucket\" property found for kind \"%s\"", c.Kind)
 	}
 	return nil
@@ -49,17 +49,17 @@ func (c *RetrieverConf) IsValid() error {
 type RetrieverKind string
 
 const (
-	HTTP          RetrieverKind = "http"
-	GitHub        RetrieverKind = "github"
-	S3            RetrieverKind = "s3"
-	File          RetrieverKind = "file"
-	GoogleStorage RetrieverKind = "googleStorage"
+	HTTPRetriever          RetrieverKind = "http"
+	GitHubRetriever        RetrieverKind = "github"
+	S3Retriever            RetrieverKind = "s3"
+	FileRetriever          RetrieverKind = "file"
+	GoogleStorageRetriever RetrieverKind = "googleStorage"
 )
 
 // IsValid is checking if the value is part of the enum
 func (r RetrieverKind) IsValid() error {
 	switch r {
-	case HTTP, GitHub, S3, File, GoogleStorage:
+	case HTTPRetriever, GitHubRetriever, S3Retriever, FileRetriever, GoogleStorageRetriever:
 		return nil
 	}
 	return fmt.Errorf("invalid retriever: kind \"%s\" is not supported", r)
