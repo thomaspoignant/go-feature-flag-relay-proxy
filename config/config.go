@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 	"net/http"
 	"time"
@@ -32,6 +33,7 @@ func setViperDefault() {
 	viper.SetDefault("listen", "1031")
 	viper.SetDefault("host", "localhost")
 	viper.SetDefault("fileFormat", "yaml")
+	viper.SetDefault("pollingInterval", 60000)
 
 	// retriever
 	viper.SetDefault("retriever.timeout", int64(10*time.Second/time.Millisecond))
@@ -59,6 +61,7 @@ type Config struct {
 	// EnableSwagger (optional) to have access to the swagger
 	EnableSwagger bool `mapstructure:"enableSwagger"`
 
+	// Host should be set if you are using swagger (default is localhost)
 	Host string `mapstructure:"host"`
 
 	// Debug (optional) if true, go-feature-flag relay proxy will run on debug mode, with more logs and custom responses
@@ -88,6 +91,10 @@ type Config struct {
 
 // IsValid contains all the validation of the configuration.
 func (c *Config) IsValid() error {
+	if c.ListenPort == 0 {
+		return fmt.Errorf("invalid port %d", c.ListenPort)
+	}
+
 	if err := c.Retriever.IsValid(); err != nil {
 		return err
 	}
