@@ -1,0 +1,41 @@
+listen: 8080
+hideBanner: true
+enableSwagger: true
+debug: true
+pollingInterval: 1000
+startWithRetrieverError: false
+retriever:
+  kind: http
+  url: https://raw.githubusercontent.com/thomaspoignant/go-feature-flag/main/examples/file/flags.yaml
+
+
+#  exporter:
+
+#    kind: file
+#    outputdir: /output-data/
+#    format: csv
+#    filename: "flag-variation-{{ .Hostname}}-{{ .Timestamp}}.{{ .Format}}",
+#    csvTemplate: "{{ .Kind}};{{ .ContextKind}};{{ .UserKey}};{{ .CreationDate}};{{ .Key}};{{ .Variation}};{{ .Value}};{{ .Default}}\n"
+
+#    kind: log
+#    format: '[{{ .FormattedDate}}] user="{{ .UserKey}}", flag="{{ .Key}}", value="{{ .Value}}"'
+
+#    kind: s3
+#    bucket: XXXX
+#    format: csv
+#    filename: "flag-variation-{{ .Hostname}}-{{ .Timestamp}}.{{ .Format}}",
+#    csvTemplate: "{{ .Kind}};{{ .ContextKind}};{{ .UserKey}};{{ .CreationDate}};{{ .Key}};{{ .Variation}};{{ .Value}};{{ .Default}}\n"
+#    s3Path: /toto
+
+#    kind: googleStorage
+#    bucket: XXXX
+#    format: csv
+#    filename: "flag-variation-{{ .Hostname}}-{{ .Timestamp}}.{{ .Format}}",
+#    csvTemplate: "{{ .Kind}};{{ .ContextKind}};{{ .UserKey}};{{ .CreationDate}};{{ .Key}};{{ .Variation}};{{ .Value}};{{ .Default}}\n"
+#    path: /toto
+
+#    kind: webhook
+#    endpointUrl: XXXX
+#    secret: csv
+#    meta:
+#     - extraInfo: info

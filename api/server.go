@@ -10,6 +10,7 @@ import (
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/controller"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/service"
 	"go.uber.org/zap"
+	"time"
 )
 
 // New is used to create a new instance of the API server
@@ -51,6 +52,11 @@ func (s *Server) init() {
 	// Middlewares
 	s.echoInstance.Use(echozap.ZapLogger(s.zapLog))
 	s.echoInstance.Use(middleware.Recover())
+
+	// TODO: timeout configuration from config
+	s.echoInstance.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
+		Timeout: 5 * time.Second,
+	}))
 
 	// Init controllers
 	cHealth := controller.NewHealth(s.monitoringService)
