@@ -11,10 +11,16 @@ import (
 func ParseConfig() (*Config, error) {
 	setViperDefault()
 
-	// TODO add more location + add flags from command line
-	viper.SetConfigName("config")
-	viper.AddConfigPath("./")
-	viper.AddConfigPath("./testdata/config/")
+	// Read config file
+	configFile := viper.GetString("config")
+	if configFile != "" {
+		viper.SetConfigFile(configFile)
+	} else {
+		viper.SetConfigName("goff-proxy")
+		viper.AddConfigPath("./")
+		viper.AddConfigPath("/goff/")
+		viper.AddConfigPath("/etc/opt/goff/")
+	}
 	err := viper.ReadInConfig()
 	if err != nil {
 		return nil, err

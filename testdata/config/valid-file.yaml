@@ -1,7 +1,4 @@
 listen: 1031
-hideBanner: true
-enableSwagger: true
-debug: true
 pollingInterval: 1000
 startWithRetrieverError: false
 retriever:
@@ -9,5 +6,3 @@ retriever:
   url: https://raw.githubusercontent.com/thomaspoignant/go-feature-flag/main/examples/file/flags.yaml
 exporter:
   kind: log
-#  outputDir: /tmp/outputdata/
-#  FlushInterval: 1000

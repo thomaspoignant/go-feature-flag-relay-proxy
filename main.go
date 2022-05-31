@@ -1,7 +1,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/api"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/config"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/docs"
@@ -33,17 +36,12 @@ _____________________________________________`
 // @license.url https://github.com/thomaspoignant/go-feature-flag-relay-proxy/blob/main/LICENSE
 // @BasePath /
 func main() {
-	// TODO: options to implement
-	// - hideBanner
-	// - enableSwagger - default is false
-	// - debug mode for echo
-	// - fail on startup
-	// - HTTP port
-	// https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html
-	// doc specifier que tous les temps sont en millisecond
-	// add more location + add flags from command line
-
 	// Init logger
+	flag.String("config", "", "Location of your config file")
+	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
+	pflag.Parse()
+	_ = viper.BindPFlags(pflag.CommandLine)
+
 	zapLog := log.InitLogger()
 	defer func() { _ = zapLog.Sync() }()
 

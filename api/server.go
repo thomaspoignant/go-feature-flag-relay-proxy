@@ -48,11 +48,7 @@ func (s *Server) init() {
 	// Middlewares
 	s.echoInstance.Use(echozap.ZapLogger(s.zapLog))
 	s.echoInstance.Use(middleware.Recover())
-
-	// TODO: timeout configuration from config
-	s.echoInstance.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
-		Timeout: 5 * time.Second,
-	}))
+	s.echoInstance.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{Timeout: 5 * time.Second}))
 
 	// Init controllers
 	cHealth := controller.NewHealth(s.monitoringService)
