@@ -9,7 +9,7 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/swaggo/echo-swagger v1.3.2
 	github.com/swaggo/swag v1.8.1
-	github.com/thomaspoignant/go-feature-flag v0.22.2
+	github.com/thomaspoignant/go-feature-flag v0.22.3
 	go.uber.org/zap v1.21.0
 )
 
@@ -73,7 +73,5 @@ require (
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/thomaspoignant/go-feature-flag v0.22.2 => /Users/thomas.poignant/Documents/dev/external_project/go-feature-flag
