@@ -1,16 +1,15 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"fmt"
-	ffclient "github.com/thomaspoignant/go-feature-flag"
-	"github.com/thomaspoignant/go-feature-flag-relay-proxy/log"
-	"go.uber.org/zap"
-	"time"
-
+	"github.com/spf13/pflag"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/api"
+	"github.com/thomaspoignant/go-feature-flag-relay-proxy/config"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/docs"
+	"github.com/thomaspoignant/go-feature-flag-relay-proxy/log"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/service"
+	"go.uber.org/zap"
 )
 
 // version, releaseDate are override by the makefile during the build.
@@ -36,37 +35,35 @@ _____________________________________________`
 // @license.url https://github.com/thomaspoignant/go-feature-flag-relay-proxy/blob/main/LICENSE
 // @BasePath /
 func main() {
-	// TODO: options to implement
-	// - hideBanner
-	// - enableSwagger - default is false
-	// - debug mode for echo
-	// - fail on startup
-	// - HTTP port
+	// Init pFlag for config file
+	flag.String("config", "", "Location of your config file")
+	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
+	pflag.Parse()
 
+	// Init logger
 	zapLog := log.InitLogger()
 	defer func() { _ = zapLog.Sync() }()
 
-	// TODO: should we print this banner ?
-	fmt.Println(banner)
+	// Loading the configuration in viper
+	proxyConf, err := config.ParseConfig(zapLog)
+	if err != nil {
+		zapLog.Fatal("error while reading configuration", zap.Error(err))
+	}
+
+	if err := proxyConf.IsValid(); err != nil {
+		zapLog.Fatal("configuration error", zap.Error(err))
+	}
+
+	if !proxyConf.HideBanner {
+		fmt.Println(banner)
+	}
 
 	// Init swagger
 	docs.SwaggerInfo.Version = version
-	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s", "3000") // TODO: change host by the config
+	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%d", proxyConf.Host, proxyConf.ListenPort)
 
 	// Init services
-	goff, err := ffclient.New(
-		ffclient.Config{
-			StartWithRetrieverError: true,
-			PollingInterval:         10 * time.Second,
-			Logger:                  zap.NewStdLog(zapLog),
-			Context:                 context.Background(),
-			Retriever: &ffclient.GithubRetriever{
-				RepositorySlug: "thomaspoignant/go-feature-flag",
-				Branch:         "main",
-				FilePath:       "testdata/flag-config.yaml",
-				Timeout:        3 * time.Second,
-			},
-		})
+	goff, err := service.NewGoFeatureFlagClient(proxyConf, zapLog)
 
 	if err != nil {
 		panic(err)
@@ -75,7 +72,7 @@ func main() {
 	monitoringService := service.NewMonitoring(goff)
 
 	// Init API server
-	apiServer := api.New(api.ServerConfig{}, monitoringService, goff, zapLog)
+	apiServer := api.New(proxyConf, monitoringService, goff, zapLog)
 	apiServer.Start()
 	defer func() { _ = apiServer.Stop }()
 }

@@ -28,3 +28,6 @@ coverage.xml
 bin/
 out/
 tmp/
+
+# Local dev files
+goff-proxy.yaml
