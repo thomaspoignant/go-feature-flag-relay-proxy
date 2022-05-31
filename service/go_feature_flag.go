@@ -152,13 +152,11 @@ func initNotifier(c []config.NotifierConf) ([]ffclient.NotifierConfig, error) {
 		switch cNotif.Kind {
 		case config.SlackNotifier:
 			notifiers = append(notifiers, &ffclient.SlackNotifier{SlackWebhookURL: cNotif.SlackWebhookURL})
-			break
 
 		case config.WebhookNotifier:
 			notifiers = append(notifiers,
 				&ffclient.WebhookConfig{Secret: cNotif.Secret, EndpointURL: cNotif.EndpointURL, Meta: cNotif.Meta},
 			)
-			break
 
 		default:
 			return nil, fmt.Errorf("invalid notifier: kind \"%s\" is not supported", cNotif.Kind)

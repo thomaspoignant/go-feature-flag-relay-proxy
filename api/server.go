@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	ffclient "github.com/thomaspoignant/go-feature-flag"
+	"github.com/thomaspoignant/go-feature-flag-relay-proxy/config"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/controller"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/service"
 	"go.uber.org/zap"
@@ -14,12 +15,12 @@ import (
 )
 
 // New is used to create a new instance of the API server
-func New(config ServerConfig,
+func New(config *config.Config,
 	monitoringService service.Monitoring,
 	goFF *ffclient.GoFeatureFlag,
 	zapLog *zap.Logger) Server {
 	s := Server{
-		serverConfig:      config,
+		config:            config,
 		monitoringService: monitoringService,
 		goFF:              goFF,
 		zapLog:            zapLog,
@@ -28,14 +29,9 @@ func New(config ServerConfig,
 	return s
 }
 
-// ServerConfig is the configuration struct for the API server
-type ServerConfig struct {
-	Port int
-}
-
 // Server is the struct that represent the API server
 type Server struct {
-	serverConfig      ServerConfig
+	config            *config.Config
 	echoInstance      *echo.Echo
 	monitoringService service.Monitoring
 	goFF              *ffclient.GoFeatureFlag
@@ -67,7 +63,11 @@ func (s *Server) init() {
 	// health Routes
 	s.echoInstance.GET("/health", cHealth.Handler)
 	s.echoInstance.GET("/info", cInfo.Handler)
-	s.echoInstance.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	// Swagger - only available if option is enabled
+	if s.config.EnableSwagger {
+		s.echoInstance.GET("/swagger/*", echoSwagger.WrapHandler)
+	}
 
 	// GO feature flags routes
 	v1 := s.echoInstance.Group("/v1")
@@ -77,10 +77,10 @@ func (s *Server) init() {
 
 // Start launch the API server
 func (s *Server) Start() {
-	if s.serverConfig.Port == 0 {
-		s.serverConfig.Port = 3000
+	if s.config.ListenPort == 0 {
+		s.config.ListenPort = 3000
 	}
-	address := fmt.Sprintf("0.0.0.0:%d", s.serverConfig.Port)
+	address := fmt.Sprintf("0.0.0.0:%d", s.config.ListenPort)
 
 	s.zapLog.Info("Starting go-feature-flag relay proxy ...", zap.String("address", address))
 

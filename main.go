@@ -41,6 +41,7 @@ func main() {
 	// - HTTP port
 	// https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html
 	// doc specifier que tous les temps sont en millisecond
+	// add more location + add flags from command line
 
 	// Init logger
 	zapLog := log.InitLogger()
@@ -74,9 +75,7 @@ func main() {
 	monitoringService := service.NewMonitoring(goff)
 
 	// Init API server
-	apiServer := api.New(api.ServerConfig{
-		Port: proxyConf.ListenPort,
-	}, monitoringService, goff, zapLog)
+	apiServer := api.New(proxyConf, monitoringService, goff, zapLog)
 	apiServer.Start()
 	defer func() { _ = apiServer.Stop }()
 }
