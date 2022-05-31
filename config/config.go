@@ -87,6 +87,9 @@ type Config struct {
 
 	// Exporter is the configuration on how to export data
 	Exporter *ExporterConf `mapstructure:"exporter"`
+
+	// Notifiers is the configuration on where to notify a flag change
+	Notifiers []NotifierConf `mapstructure:"notifier"`
 }
 
 // IsValid contains all the validation of the configuration.
@@ -104,5 +107,14 @@ func (c *Config) IsValid() error {
 			return err
 		}
 	}
+
+	if c.Notifiers != nil {
+		for _, notif := range c.Notifiers {
+			if err := notif.IsValid(); err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }

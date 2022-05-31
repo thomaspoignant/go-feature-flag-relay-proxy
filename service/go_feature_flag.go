@@ -24,12 +24,20 @@ func NewGoFeatureFlagClient(proxyConf *config.Config, logger *zap.Logger) (*ffcl
 		}
 	}
 
+	var notif []ffclient.NotifierConfig
+	if proxyConf.Notifiers != nil {
+		notif, err = initNotifier(proxyConf.Notifiers)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	f := ffclient.Config{
-		PollingInterval: time.Duration(proxyConf.PollingInterval) * time.Millisecond,
-		Logger:          zap.NewStdLog(logger),
-		Context:         context.Background(),
-		Retriever:       retriever,
-		//Notifiers:               nil,
+		PollingInterval:         time.Duration(proxyConf.PollingInterval) * time.Millisecond,
+		Logger:                  zap.NewStdLog(logger),
+		Context:                 context.Background(),
+		Retriever:               retriever,
+		Notifiers:               notif,
 		FileFormat:              proxyConf.FileFormat,
 		DataExporter:            exp,
 		StartWithRetrieverError: proxyConf.StartWithRetrieverError,
@@ -135,4 +143,26 @@ func initExporter(c *config.ExporterConf) (ffclient.DataExporter, error) {
 	default:
 		return ffclient.DataExporter{}, fmt.Errorf("invalid exporter: kind \"%s\" is not supported", c.Kind)
 	}
+}
+
+func initNotifier(c []config.NotifierConf) ([]ffclient.NotifierConfig, error) {
+	var notifiers []ffclient.NotifierConfig
+
+	for _, cNotif := range c {
+		switch cNotif.Kind {
+		case config.SlackNotifier:
+			notifiers = append(notifiers, &ffclient.SlackNotifier{SlackWebhookURL: cNotif.SlackWebhookURL})
+			break
+
+		case config.WebhookNotifier:
+			notifiers = append(notifiers,
+				&ffclient.WebhookConfig{Secret: cNotif.Secret, EndpointURL: cNotif.EndpointURL, Meta: cNotif.Meta},
+			)
+			break
+
+		default:
+			return nil, fmt.Errorf("invalid notifier: kind \"%s\" is not supported", cNotif.Kind)
+		}
+	}
+	return notifiers, nil
 }
