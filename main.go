@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/api"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/config"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/docs"
@@ -36,17 +35,17 @@ _____________________________________________`
 // @license.url https://github.com/thomaspoignant/go-feature-flag-relay-proxy/blob/main/LICENSE
 // @BasePath /
 func main() {
-	// Init logger
+	// Init pFlag for config file
 	flag.String("config", "", "Location of your config file")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 	pflag.Parse()
-	_ = viper.BindPFlags(pflag.CommandLine)
 
+	// Init logger
 	zapLog := log.InitLogger()
 	defer func() { _ = zapLog.Sync() }()
 
 	// Loading the configuration in viper
-	proxyConf, err := config.ParseConfig()
+	proxyConf, err := config.ParseConfig(zapLog)
 	if err != nil {
 		zapLog.Fatal("error while reading configuration", zap.Error(err))
 	}

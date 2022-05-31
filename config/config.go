@@ -2,20 +2,29 @@ package config
 
 import (
 	"fmt"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"net/http"
 	"time"
 )
 
 // ParseConfig is reading the configuration file
-func ParseConfig() (*Config, error) {
+func ParseConfig(log *zap.Logger) (*Config, error) {
 	setViperDefault()
+
+	errBindFlag := viper.BindPFlags(pflag.CommandLine)
+	if errBindFlag != nil {
+		log.Fatal("impossible to parse flag command line", zap.Error(errBindFlag))
+	}
 
 	// Read config file
 	configFile := viper.GetString("config")
 	if configFile != "" {
+		log.Info("reading config from file", zap.String("fileLocation", configFile))
 		viper.SetConfigFile(configFile)
 	} else {
+		log.Info("reading config from default directories")
 		viper.SetConfigName("goff-proxy")
 		viper.AddConfigPath("./")
 		viper.AddConfigPath("/goff/")

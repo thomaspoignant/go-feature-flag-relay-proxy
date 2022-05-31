@@ -1,10 +1,10 @@
 package config_test
 
 import (
-	"fmt"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/config"
+	"go.uber.org/zap"
 	"io"
 	"os"
 	"testing"
@@ -82,7 +82,7 @@ func TestParseConfig_fileFromPflag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			viper.Set("config", tt.fileLocation)
-			got, err := config.ParseConfig()
+			got, err := config.ParseConfig(zap.L())
 			if !tt.wantErr(t, err) {
 				return
 			}
@@ -166,7 +166,7 @@ func TestParseConfig_fileFromFolder(t *testing.T) {
 			defer os.Remove("./goff-proxy.yaml")
 			_, _ = io.Copy(destination, source)
 
-			got, err := config.ParseConfig()
+			got, err := config.ParseConfig(zap.L())
 			if !tt.wantErr(t, err) {
 				return
 			}
@@ -285,7 +285,7 @@ func TestConfig_IsValid(t *testing.T) {
 				Exporter:                tt.fields.Exporter,
 				Notifiers:               tt.fields.Notifiers,
 			}
-			tt.wantErr(t, c.IsValid(), fmt.Sprintf("IsValid()"))
+			tt.wantErr(t, c.IsValid(), "invalid configuration")
 		})
 	}
 }
