@@ -49,6 +49,7 @@ func setViperDefault() {
 	viper.SetDefault("host", "localhost")
 	viper.SetDefault("fileFormat", "yaml")
 	viper.SetDefault("pollingInterval", 60000)
+	viper.SetDefault("restApiTimeout", 5000)
 
 	// retriever
 	viper.SetDefault("retriever.timeout", int64(10*time.Second/time.Millisecond))
@@ -105,6 +106,9 @@ type Config struct {
 
 	// Notifiers is the configuration on where to notify a flag change
 	Notifiers []NotifierConf `mapstructure:"notifier"`
+
+	// RestAPITimeout is the timeout on the API.
+	RestAPITimeout int `mapstructure:"restApiTimeout"`
 }
 
 // IsValid contains all the validation of the configuration.
