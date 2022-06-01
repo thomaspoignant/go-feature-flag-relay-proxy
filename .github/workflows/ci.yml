@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '^1.18.0'
-      - run: make lint-go
+      - run: make vendor && make lint-go
 
   Test:
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '^1.18.0'
-      - run: make test
+      - run: make vendor && make test
 
   Coverage:
     needs: Test
@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '^1.18.0'
-      - run: make coverage
+      - run: make vendor && make coverage
       - uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: coverage.cov
