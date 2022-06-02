@@ -45,7 +45,7 @@ func main() {
 	defer func() { _ = zapLog.Sync() }()
 
 	// Loading the configuration in viper
-	proxyConf, err := config.ParseConfig(zapLog)
+	proxyConf, err := config.ParseConfig(zapLog, version)
 	if err != nil {
 		zapLog.Fatal("error while reading configuration", zap.Error(err))
 	}
@@ -59,7 +59,7 @@ func main() {
 	}
 
 	// Init swagger
-	docs.SwaggerInfo.Version = version
+	docs.SwaggerInfo.Version = proxyConf.Version
 	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%d", proxyConf.Host, proxyConf.ListenPort)
 
 	// Init services
