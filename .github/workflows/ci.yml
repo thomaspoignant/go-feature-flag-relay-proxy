@@ -7,7 +7,8 @@ on:
     types: [ opened, synchronize, reopened ]
 
 jobs:
-  Lint:
+  "Lint_GO":
+    name: Lint GO
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -17,6 +18,18 @@ jobs:
         with:
           go-version: '^1.18.0'
       - run: make lint-go
+
+  "Lint_Dockerfile":
+    name: Lint Dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '^1.18.0'
+      - run: make lint-dockerfile
 
   Test:
     runs-on: ubuntu-latest
