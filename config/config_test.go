@@ -42,6 +42,7 @@ func TestParseConfig_fileFromPflag(t *testing.T) {
 				},
 				StartWithRetrieverError: false,
 				RestAPITimeout:          5000,
+				Version:                 "1.X.X",
 			},
 			wantErr: assert.NoError,
 		},
@@ -67,6 +68,7 @@ func TestParseConfig_fileFromPflag(t *testing.T) {
 				},
 				StartWithRetrieverError: false,
 				RestAPITimeout:          5000,
+				Version:                 "1.X.X",
 			},
 			wantErr: assert.NoError,
 		},
@@ -84,7 +86,7 @@ func TestParseConfig_fileFromPflag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			viper.Set("config", tt.fileLocation)
-			got, err := config.ParseConfig(zap.L())
+			got, err := config.ParseConfig(zap.L(), "1.X.X")
 			if !tt.wantErr(t, err) {
 				return
 			}
@@ -126,6 +128,7 @@ func TestParseConfig_fileFromFolder(t *testing.T) {
 				},
 				StartWithRetrieverError: false,
 				RestAPITimeout:          5000,
+				Version:                 "1.X.X",
 			},
 			wantErr: assert.NoError,
 		},
@@ -151,6 +154,7 @@ func TestParseConfig_fileFromFolder(t *testing.T) {
 				},
 				StartWithRetrieverError: false,
 				RestAPITimeout:          5000,
+				Version:                 "1.X.X",
 			},
 			wantErr: assert.NoError,
 		},
@@ -170,7 +174,7 @@ func TestParseConfig_fileFromFolder(t *testing.T) {
 			defer os.Remove("./goff-proxy.yaml")
 			_, _ = io.Copy(destination, source)
 
-			got, err := config.ParseConfig(zap.L())
+			got, err := config.ParseConfig(zap.L(), "1.X.X")
 			if !tt.wantErr(t, err) {
 				return
 			}

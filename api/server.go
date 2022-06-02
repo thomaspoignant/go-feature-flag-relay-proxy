@@ -80,7 +80,10 @@ func (s *Server) Start() {
 	}
 	address := fmt.Sprintf("0.0.0.0:%d", s.config.ListenPort)
 
-	s.zapLog.Info("Starting go-feature-flag relay proxy ...", zap.String("address", address))
+	s.zapLog.Info(
+		"Starting go-feature-flag relay proxy ...",
+		zap.String("address", address),
+		zap.String("version", s.config.Version))
 
 	err := s.echoInstance.Start(address)
 	if err != nil {
