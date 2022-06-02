@@ -31,3 +31,7 @@ tmp/
 
 # Local dev files
 goff-proxy.yaml
+
+# release folders
+dist/
+release/

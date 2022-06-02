@@ -10,8 +10,9 @@ import (
 )
 
 // ParseConfig is reading the configuration file
-func ParseConfig(log *zap.Logger) (*Config, error) {
+func ParseConfig(log *zap.Logger, version string) (*Config, error) {
 	setViperDefault()
+	viper.Set("version", version)
 
 	errBindFlag := viper.BindPFlags(pflag.CommandLine)
 	if errBindFlag != nil {
@@ -109,6 +110,9 @@ type Config struct {
 
 	// RestAPITimeout is the timeout on the API.
 	RestAPITimeout int `mapstructure:"restApiTimeout"`
+
+	// Version is the version of the relay-proxy
+	Version string
 }
 
 // IsValid contains all the validation of the configuration.
