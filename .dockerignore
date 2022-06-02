@@ -1,0 +1,7 @@
+out/
+release/
+dist/
+.github/
+.idea/
+vendor/
+testdata/

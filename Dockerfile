@@ -1,0 +1,13 @@
+FROM golang:1.18 AS build
+
+ARG VERSION=127.0.0.1
+
+WORKDIR /go/src/app
+COPY . /go/src/app
+
+RUN make vendor && make build VERSION="${VERSION}"
+RUN ls /go/src/app/out/bin
+
+FROM gcr.io/distroless/base-debian11:latest
+COPY --from=build /go/src/app/out/bin/go-feature-flag-relay-proxy /
+CMD ["/go-feature-flag-relay-proxy"]

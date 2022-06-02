@@ -20,7 +20,7 @@ all: help
 ## Build:
 build: ## Build your project and put the output binary in out/bin/
 	mkdir -p out/bin
-	GO111MODULE=on $(GOCMD) build -mod vendor -o out/bin/$(BINARY_NAME) .
+	GO111MODULE=on $(GOCMD) build -mod vendor -ldflags "-s -w -X main.version=$(VERSION)" -o out/bin/$(BINARY_NAME) .
 
 clean: ## Remove build related file
 	rm -fr ./bin
@@ -75,7 +75,7 @@ endif
 
 ## Docker:
 docker-build: ## Use the dockerfile to build the container
-	docker build --rm --tag $(BINARY_NAME) .
+	docker build --rm --tag $(BINARY_NAME) --build-arg VERSION=$(VERSION) .
 
 docker-release: ## Release the container with tag latest and version
 	docker tag $(BINARY_NAME) $(DOCKER_REGISTRY)$(BINARY_NAME):latest
