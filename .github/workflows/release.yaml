@@ -21,6 +21,12 @@ jobs:
         with:
           go-version: '^1.18.0'
 
+      - name: Docker login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login --username "${DOCKER_USERNAME}" --password-stdin
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
