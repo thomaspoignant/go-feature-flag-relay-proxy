@@ -55,6 +55,7 @@ lint: lint-go lint-dockerfile lint-yaml ## Run all available linters
 
 lint-dockerfile: ## Lint your Dockerfile
 	docker run --rm -i -v $(shell pwd)/.hadolint.yaml:/root/.config/hadolint.yaml hadolint/hadolint hadolint --config /root/.config/hadolint.yaml  - < ./Dockerfile
+	docker run --rm -i -v $(shell pwd)/.hadolint.yaml:/root/.config/hadolint.yaml hadolint/hadolint hadolint --config /root/.config/hadolint.yaml  - < ./DockerfileGoreleaser
 
 lint-go: ## Use golintci-lint on your project
 	$(eval OUTPUT_OPTIONS = $(shell [ "${EXPORT_RESULT}" == "true" ] && echo "--out-format checkstyle ./... | tee /dev/tty > checkstyle-report.xml" || echo "" ))
