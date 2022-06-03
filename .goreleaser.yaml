@@ -30,8 +30,7 @@ dockers:
       - thomaspoignant/{{.ProjectName}}:v{{ .Major }}.{{ .Minor }}
 
 brews:
-  - # Github repository to push the tap to.
-    tap:
+  - tap:
       owner: thomaspoignant
       name: homebrew-tap
 
@@ -41,20 +40,13 @@ brews:
     skip_upload: auto
 
 scoop:
-  # Template for the url which is determined by the given Token (github or gitlab)
-  url_template: "http://github.com/thomaspoignant/go-feature-flag-relay-proxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-
-  # Repository to push the app manifest to.
+  url_template: "https://github.com/thomaspoignant/go-feature-flag-relay-proxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
   bucket:
     owner: thomaspoignant
     name: scoop
-  # The project name and current git tag are used in the format string.
   commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
-  # Your app's homepage.
   homepage: "https://github.com/thomaspoignant/go-feature-flag-relay-proxy"
-  # Your app's description.
   description: "GO-feature-flag-relay-proxy is a proxy application to manage your feature flags."
-  # Your app's license
   license: MIT
 
 archives:
