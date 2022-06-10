@@ -43,7 +43,7 @@ func (s *Server) init() {
 	s.echoInstance = echo.New()
 	s.echoInstance.HideBanner = true
 	s.echoInstance.HidePort = true
-	s.echoInstance.Debug = true
+	s.echoInstance.Debug = s.config.Debug
 
 	// Middlewares
 	s.echoInstance.Use(echozap.ZapLogger(s.zapLog))
