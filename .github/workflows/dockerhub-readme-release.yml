@@ -26,5 +26,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: peterevans/dockerhub-description
+          repository: thomaspoignant/go-feature-flag-relay-proxy
           readme-filepath: ./docs/dockerhub_readme.md
