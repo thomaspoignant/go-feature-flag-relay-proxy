@@ -18,13 +18,19 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened ]
 jobs:
-  release-readme-dockerhub:
+  "release-readme-dockerhub":
+    name: Release readme to DockerHub
     runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
-      - name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Sync
+        uses: ms-jpq/sync-dockerhub-readme@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${DOCKER_USERNAME}
+          password: ${DOCKER_PASSWORD}
           repository: thomaspoignant/go-feature-flag-relay-proxy
-          readme-filepath: ./docs/dockerhub_readme.md
+          readme: "./docs/dockerhub_readme.md"
