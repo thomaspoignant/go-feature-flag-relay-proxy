@@ -22,5 +22,6 @@ Resolve #
 # Checklist
 - [ ] I have tested this code
 - [ ] I have added unit test to cover this code
+- [ ] I have rebuilt the Swagger documentation (`make swagger`)
 - [ ] I have updated the documentation (README.md)
 - [ ] I have followed the [contributing guide](CONTRIBUTING.md)

@@ -19,8 +19,11 @@ func NewFlagEval(goFF *ffclient.GoFeatureFlag) Controller {
 }
 
 // Handler is the entry point for the flag eval endpoint
-// @Summary      allflags returns all the flag for a specific user.
-// @Description  allflags returns all the flag for a specific user.
+// @Summary      Evaluate the users with the corresponding flag and return the value for the user.
+// @Description  Evaluate the users with the corresponding flag and return the value for the user.
+// @Description  Note that you will always have a usable value in the response, you can use the field failed to know if
+// @Description  an issue has occurred during the validation of the flag, in that case the value returned will be the
+// @Description  default value.
 // @Tags         flags
 // @Produce      json
 // @Accept			 json
