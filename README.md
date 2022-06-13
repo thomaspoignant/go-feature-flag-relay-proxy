@@ -91,6 +91,7 @@ The Relay Proxy defines many HTTP/HTTPS endpoints.
 Most of these are proxies for GO Feature Flag services, to be used by SDKs that connect to the Relay Proxy.  
 Others are specific to the Relay Proxy, such as for monitoring its status.
 
+Please refer to [endpoints documentation](docs/endpoints.md) to get the full details of what exists in our REST API.
 
 ## How can I contribute?
 This project is open for contribution, see the [contributor's guide](CONTRIBUTING.md) for some helpful tips.

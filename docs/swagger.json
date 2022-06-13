@@ -102,7 +102,7 @@
         },
         "/v1/feature/{flag_key}/eval": {
             "post": {
-                "description": "allflags returns all the flag for a specific user.",
+                "description": "Evaluate the users with the corresponding flag and return the value for the user.\nNote that you will always have a usable value in the response, you can use the field failed to know if\nan issue has occurred during the validation of the flag, in that case the value returned will be the\ndefault value.",
                 "consumes": [
                     "application/json"
                 ],
@@ -112,7 +112,7 @@
                 "tags": [
                     "flags"
                 ],
-                "summary": "allflags returns all the flag for a specific user.",
+                "summary": "Evaluate the users with the corresponding flag and return the value for the user.",
                 "parameters": [
                     {
                         "description": "Payload of the user we want to get all the flags from.",

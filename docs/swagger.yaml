@@ -148,7 +148,11 @@ paths:
     post:
       consumes:
       - application/json
-      description: allflags returns all the flag for a specific user.
+      description: |-
+        Evaluate the users with the corresponding flag and return the value for the user.
+        Note that you will always have a usable value in the response, you can use the field failed to know if
+        an issue has occurred during the validation of the flag, in that case the value returned will be the
+        default value.
       parameters:
       - description: Payload of the user we want to get all the flags from.
         in: body
@@ -176,7 +180,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/echo.HTTPError'
-      summary: allflags returns all the flag for a specific user.
+      summary: Evaluate the users with the corresponding flag and return the value
+        for the user.
       tags:
       - flags
 swagger: "2.0"
