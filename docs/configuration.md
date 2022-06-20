@@ -72,6 +72,18 @@ In this section we will present all the available retriever configuration availa
 | `bucket`   | string | **none** | **(mandatory)** This is the name of your Google Storage bucket _(ex: `my-featureflag-bucket`)_.                               |
 | `object`   | string | **none** | **(mandatory)** Path to the file inside the bucket _(ex: `config/flag/my-flags.yaml`)_.                                       |
 
+
+### Kubernetes ConfigMap
+
+_Note that relay proxy is only supporting this while running inside the kubernetes cluster._
+
+| Field name  | Type   | Default  | Description                                                                                                               |
+|-------------|--------|----------|---------------------------------------------------------------------------------------------------------------------------|
+| `kind`      | string | **none** | **(mandatory)** Value should be **`configmap`**.<br>_This field is mandatory and describe which retriever you are using._ |
+| `namespace` | string | **none** | **(mandatory)** This is the name of the namespace where your **configmap** is located _(ex: `default`)_.                  |
+| `configmap` | string | **none** | **(mandatory)** Name of the **configmap** we should read  _(ex: `feature-flag`)_.                                         |
+| `key`       | string | **none** | **(mandatory)** Name of the `key` in the **configmap** which contains the flag.                                           |
+
 <a name="exporter"></a>
 ## type `exporter`
 

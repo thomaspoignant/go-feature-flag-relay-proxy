@@ -7,6 +7,7 @@ import (
 	"github.com/thomaspoignant/go-feature-flag/ffexporter"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
+	"k8s.io/client-go/rest"
 	"time"
 )
 
@@ -82,6 +83,18 @@ func initRetriever(c *config.RetrieverConf) (ffclient.Retriever, error) {
 		return &ffclient.GCStorageRetriever{
 			Bucket: c.Bucket,
 			Object: c.Object,
+		}, nil
+
+	case config.KubernetesRetriever:
+		client, err := rest.InClusterConfig()
+		if err != nil {
+			return nil, err
+		}
+		return &ffclient.KubernetesRetriever{
+			Namespace:     c.Namespace,
+			ConfigMapName: c.ConfigMap,
+			Key:           c.Key,
+			ClientConfig:  *client,
 		}, nil
 
 	default:

@@ -8,36 +8,21 @@ import (
 )
 
 func TestRetrieverConf_IsValid(t *testing.T) {
-	type fields struct {
-		Kind           string
-		RepositorySlug string
-		Branch         string
-		Path           string
-		GithubToken    string
-		URL            string
-		Timeout        int64
-		HTTPMethod     string
-		HTTPBody       string
-		HTTPHeaders    map[string][]string
-		Bucket         string
-		Object         string
-		Item           string
-	}
 	tests := []struct {
 		name     string
-		fields   fields
+		fields   config.RetrieverConf
 		wantErr  bool
 		errValue string
 	}{
 		{
 			name:     "no fields",
-			fields:   fields{},
+			fields:   config.RetrieverConf{},
 			wantErr:  true,
 			errValue: "invalid retriever: kind \"\" is not supported",
 		},
 		{
 			name: "invalid kind",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "invalid",
 			},
 			wantErr:  true,
@@ -45,7 +30,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind GitHubRetriever without repo slug",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "github",
 			},
 			wantErr:  true,
@@ -53,7 +38,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind S3Retriever without item",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "s3",
 			},
 			wantErr:  true,
@@ -61,7 +46,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind HTTPRetriever without URL",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "http",
 			},
 			wantErr:  true,
@@ -69,7 +54,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind GCP without Object",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "googleStorage",
 			},
 			wantErr:  true,
@@ -77,7 +62,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind GitHubRetriever without path",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind:           "github",
 				RepositorySlug: "thomaspoignant/go-feature-flag",
 			},
@@ -86,7 +71,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind file without path",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "file",
 			},
 			wantErr:  true,
@@ -94,7 +79,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind s3 without bucket",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "s3",
 				Item: "test.yaml",
 			},
@@ -103,7 +88,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "kind google storage without bucket",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind:   "googleStorage",
 				Object: "test.yaml",
 			},
@@ -112,7 +97,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "valid s3",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind:   "s3",
 				Item:   "test.yaml",
 				Bucket: "testBucket",
@@ -120,7 +105,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "valid googleStorage",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind:   "googleStorage",
 				Object: "test.yaml",
 				Bucket: "testBucket",
@@ -128,7 +113,7 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "valid github",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind:           "github",
 				RepositorySlug: "thomaspoignant/go-feature-flag",
 				Branch:         "main",
@@ -139,14 +124,14 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 		},
 		{
 			name: "valid file",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind: "file",
 				Path: "testdata/config.yaml",
 			},
 		},
 		{
 			name: "valid http",
-			fields: fields{
+			fields: config.RetrieverConf{
 				Kind:       "http",
 				URL:        "http://perdu.com/flags",
 				HTTPMethod: http.MethodGet,
@@ -157,24 +142,41 @@ func TestRetrieverConf_IsValid(t *testing.T) {
 				Timeout: 5000,
 			},
 		},
+		{
+			name: "kind k8s configmap without namespace",
+			fields: config.RetrieverConf{
+				Kind:      "configmap",
+				Namespace: "",
+				Key:       "xxx",
+				ConfigMap: "xxx",
+			},
+			wantErr:  true,
+			errValue: "invalid retriever: no \"namespace\" property found for kind \"configmap\"",
+		},
+		{
+			name: "kind k8s configmap without key",
+			fields: config.RetrieverConf{
+				Kind:      "configmap",
+				Namespace: "xxx",
+				ConfigMap: "xxx",
+			},
+			wantErr:  true,
+			errValue: "invalid retriever: no \"key\" property found for kind \"configmap\"",
+		},
+		{
+			name: "kind k8s configmap without key",
+			fields: config.RetrieverConf{
+				Kind:      "configmap",
+				Namespace: "xxx",
+				Key:       "xxx",
+			},
+			wantErr:  true,
+			errValue: "invalid retriever: no \"configmap\" property found for kind \"configmap\"",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &config.RetrieverConf{
-				Kind:           config.RetrieverKind(tt.fields.Kind),
-				RepositorySlug: tt.fields.RepositorySlug,
-				Branch:         tt.fields.Branch,
-				Path:           tt.fields.Path,
-				GithubToken:    tt.fields.GithubToken,
-				URL:            tt.fields.URL,
-				Timeout:        tt.fields.Timeout,
-				HTTPMethod:     tt.fields.HTTPMethod,
-				HTTPBody:       tt.fields.HTTPBody,
-				HTTPHeaders:    tt.fields.HTTPHeaders,
-				Bucket:         tt.fields.Bucket,
-				Object:         tt.fields.Object,
-				Item:           tt.fields.Item,
-			}
+			c := tt.fields
 			err := c.IsValid()
 			assert.Equal(t, tt.wantErr, err != nil)
 			if tt.wantErr {
