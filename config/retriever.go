@@ -23,6 +23,7 @@ type RetrieverConf struct {
 }
 
 // IsValid validate the configuration of the retriever
+// nolint:gocognit
 func (c *RetrieverConf) IsValid() error {
 	if err := c.Kind.IsValid(); err != nil {
 		return err
