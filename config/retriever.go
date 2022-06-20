@@ -17,9 +17,13 @@ type RetrieverConf struct {
 	Bucket         string              `mapstructure:"bucket"`
 	Object         string              `mapstructure:"object"`
 	Item           string              `mapstructure:"item"`
+	Namespace      string              `mapstructure:"namespace"`
+	ConfigMap      string              `mapstructure:"configmap"`
+	Key            string              `mapstructure:"key"`
 }
 
 // IsValid validate the configuration of the retriever
+// nolint:gocognit
 func (c *RetrieverConf) IsValid() error {
 	if err := c.Kind.IsValid(); err != nil {
 		return err
@@ -42,6 +46,15 @@ func (c *RetrieverConf) IsValid() error {
 	if (c.Kind == S3Retriever || c.Kind == GoogleStorageRetriever) && c.Bucket == "" {
 		return fmt.Errorf("invalid retriever: no \"bucket\" property found for kind \"%s\"", c.Kind)
 	}
+	if c.Kind == KubernetesRetriever && c.ConfigMap == "" {
+		return fmt.Errorf("invalid retriever: no \"configmap\" property found for kind \"%s\"", c.Kind)
+	}
+	if c.Kind == KubernetesRetriever && c.Namespace == "" {
+		return fmt.Errorf("invalid retriever: no \"namespace\" property found for kind \"%s\"", c.Kind)
+	}
+	if c.Kind == KubernetesRetriever && c.Key == "" {
+		return fmt.Errorf("invalid retriever: no \"key\" property found for kind \"%s\"", c.Kind)
+	}
 	return nil
 }
 
@@ -54,12 +67,13 @@ const (
 	S3Retriever            RetrieverKind = "s3"
 	FileRetriever          RetrieverKind = "file"
 	GoogleStorageRetriever RetrieverKind = "googleStorage"
+	KubernetesRetriever    RetrieverKind = "configmap"
 )
 
 // IsValid is checking if the value is part of the enum
 func (r RetrieverKind) IsValid() error {
 	switch r {
-	case HTTPRetriever, GitHubRetriever, S3Retriever, FileRetriever, GoogleStorageRetriever:
+	case HTTPRetriever, GitHubRetriever, S3Retriever, FileRetriever, GoogleStorageRetriever, KubernetesRetriever:
 		return nil
 	}
 	return fmt.Errorf("invalid retriever: kind \"%s\" is not supported", r)
