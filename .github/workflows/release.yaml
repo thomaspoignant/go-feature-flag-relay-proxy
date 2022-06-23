@@ -37,6 +37,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
+  upload_dockerhub_readme:
+    runs-on: ubuntu-latest
+    name: Upload dockerhub readme
+    needs:
+      - goreleaser
+    steps:
       - name: Release readme to DockerHub
         uses: ms-jpq/sync-dockerhub-readme@v1
         env:
