@@ -46,4 +46,4 @@ jobs:
           username: ${DOCKER_USERNAME}
           password: ${DOCKER_PASSWORD}
           repository: thomaspoignant/go-feature-flag-relay-proxy
-          readme: "./docs/dockerhub_readme.md"
+          readme: "./DOCKERHUB.md"
