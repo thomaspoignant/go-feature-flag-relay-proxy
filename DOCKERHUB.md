@@ -4,12 +4,12 @@
   <img width="250" height="238" src="https://github.com/thomaspoignant/go-feature-flag/raw/main/logo.png" alt="go-feature-flag logo" />
 </p>
 
-<center>
+<p align="center">
   <img alt="Docker Image Version" src="https://img.shields.io/docker/v/thomaspoignant/go-feature-flag-relay-proxy?sort=date&color=green"/>
   <img alt="Docker Hub downloads" src="https://img.shields.io/docker/pulls/thomaspoignant/go-feature-flag-relay-proxy?logo=docker"/>
   <a href="https://github.com/thomaspoignant/go-feature-flag-relay-proxy/blob/main/LICENSE"><img src="https://img.shields.io/github/license/thomaspoignant/go-feature-flag-relay-proxy" alt="License"/></a>
   <a href="https://gophers.slack.com/messages/go-feature-flag"><img src="https://img.shields.io/badge/join-us%20on%20slack-gray.svg?longCache=true&logo=slack&colorB=green" alt="Join us on slack"></a> 
-</center>
+</p>
 
 --- 
 
