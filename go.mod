@@ -10,7 +10,7 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/swaggo/echo-swagger v1.3.2
 	github.com/swaggo/swag v1.8.2
-	github.com/thomaspoignant/go-feature-flag v0.23.1
+	github.com/thomaspoignant/go-feature-flag v0.25.0
 	go.uber.org/zap v1.21.0
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2
 	k8s.io/client-go v0.24.1
