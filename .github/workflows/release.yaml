@@ -52,4 +52,4 @@ jobs:
           username: ${DOCKER_USERNAME}
           password: ${DOCKER_PASSWORD}
           repository: thomaspoignant/go-feature-flag-relay-proxy
-          readme: "./DOCKERHUB.md"
+          readme: "DOCKERHUB.md"
