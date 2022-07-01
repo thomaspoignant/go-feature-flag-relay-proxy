@@ -3,7 +3,7 @@ module github.com/thomaspoignant/go-feature-flag-relay-proxy
 go 1.18
 
 require (
-	github.com/brpaz/echozap v1.1.2
+	github.com/brpaz/echozap v1.1.3
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0
