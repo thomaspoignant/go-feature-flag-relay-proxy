@@ -28,6 +28,7 @@ clean: ## Remove build related file
 	rm -f ./junit-report.xml checkstyle-report.xml ./coverage.xml ./profile.cov yamllint-checkstyle.xml
 
 vendor: ## Copy of all packages needed to support builds and tests in the vendor directory
+	$(GOCMD) mod tidy
 	$(GOCMD) mod vendor
 
 watch: ## Run the code with cosmtrek/air to have automatic reload on changes
