@@ -4,7 +4,21 @@ import (
 	"fmt"
 	ffclient "github.com/thomaspoignant/go-feature-flag"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/config"
-	"github.com/thomaspoignant/go-feature-flag/ffexporter"
+	"github.com/thomaspoignant/go-feature-flag/exporter/fileexporter"
+	"github.com/thomaspoignant/go-feature-flag/exporter/gcstorageexporter"
+	"github.com/thomaspoignant/go-feature-flag/exporter/logsexporter"
+	"github.com/thomaspoignant/go-feature-flag/exporter/s3exporter"
+	"github.com/thomaspoignant/go-feature-flag/exporter/webhookexporter"
+	"github.com/thomaspoignant/go-feature-flag/notifier"
+	"github.com/thomaspoignant/go-feature-flag/notifier/slacknotifier"
+	"github.com/thomaspoignant/go-feature-flag/notifier/webhooknotifier"
+	"github.com/thomaspoignant/go-feature-flag/retriever"
+	"github.com/thomaspoignant/go-feature-flag/retriever/fileretriever"
+	"github.com/thomaspoignant/go-feature-flag/retriever/gcstorageretriever"
+	"github.com/thomaspoignant/go-feature-flag/retriever/githubretriever"
+	"github.com/thomaspoignant/go-feature-flag/retriever/httpretriever"
+	"github.com/thomaspoignant/go-feature-flag/retriever/k8sretriever"
+	"github.com/thomaspoignant/go-feature-flag/retriever/s3retriever"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"k8s.io/client-go/rest"
@@ -25,7 +39,7 @@ func NewGoFeatureFlagClient(proxyConf *config.Config, logger *zap.Logger) (*ffcl
 		}
 	}
 
-	var notif []ffclient.NotifierConfig
+	var notif []notifier.Notifier
 	if proxyConf.Notifiers != nil {
 		notif, err = initNotifier(proxyConf.Notifiers)
 		if err != nil {
@@ -47,11 +61,11 @@ func NewGoFeatureFlagClient(proxyConf *config.Config, logger *zap.Logger) (*ffcl
 	return ffclient.New(f)
 }
 
-func initRetriever(c *config.RetrieverConf) (ffclient.Retriever, error) {
+func initRetriever(c *config.RetrieverConf) (retriever.Retriever, error) {
 	// Conversions
 	switch c.Kind {
 	case config.GitHubRetriever:
-		return &ffclient.GithubRetriever{
+		return &githubretriever.Retriever{
 			RepositorySlug: c.RepositorySlug,
 			Branch:         c.Branch,
 			FilePath:       c.Path,
@@ -60,18 +74,18 @@ func initRetriever(c *config.RetrieverConf) (ffclient.Retriever, error) {
 		}, nil
 
 	case config.FileRetriever:
-		return &ffclient.FileRetriever{
+		return &fileretriever.Retriever{
 			Path: c.Path,
 		}, nil
 
 	case config.S3Retriever:
-		return &ffclient.S3Retriever{
+		return &s3retriever.Retriever{
 			Bucket: c.Bucket,
 			Item:   c.Item,
 		}, nil
 
 	case config.HTTPRetriever:
-		return &ffclient.HTTPRetriever{
+		return &httpretriever.Retriever{
 			URL:     c.URL,
 			Method:  c.HTTPMethod,
 			Body:    c.HTTPBody,
@@ -80,7 +94,7 @@ func initRetriever(c *config.RetrieverConf) (ffclient.Retriever, error) {
 		}, nil
 
 	case config.GoogleStorageRetriever:
-		return &ffclient.GCStorageRetriever{
+		return &gcstorageretriever.Retriever{
 			Bucket: c.Bucket,
 			Object: c.Object,
 		}, nil
@@ -90,7 +104,7 @@ func initRetriever(c *config.RetrieverConf) (ffclient.Retriever, error) {
 		if err != nil {
 			return nil, err
 		}
-		return &ffclient.KubernetesRetriever{
+		return &k8sretriever.Retriever{
 			Namespace:     c.Namespace,
 			ConfigMapName: c.ConfigMap,
 			Key:           c.Key,
@@ -111,7 +125,7 @@ func initExporter(c *config.ExporterConf) (ffclient.DataExporter, error) {
 
 	switch c.Kind {
 	case config.WebhookExporter:
-		dataExp.Exporter = &ffexporter.Webhook{
+		dataExp.Exporter = &webhookexporter.Exporter{
 			EndpointURL: c.EndpointURL,
 			Secret:      c.Secret,
 			Meta:        c.Meta,
@@ -119,7 +133,7 @@ func initExporter(c *config.ExporterConf) (ffclient.DataExporter, error) {
 		return dataExp, nil
 
 	case config.FileExporter:
-		dataExp.Exporter = &ffexporter.File{
+		dataExp.Exporter = &fileexporter.Exporter{
 			Format:      c.Format,
 			OutputDir:   c.OutputDir,
 			Filename:    c.Filename,
@@ -128,13 +142,13 @@ func initExporter(c *config.ExporterConf) (ffclient.DataExporter, error) {
 		return dataExp, nil
 
 	case config.LogExporter:
-		dataExp.Exporter = &ffexporter.Log{
+		dataExp.Exporter = &logsexporter.Exporter{
 			LogFormat: c.LogFormat,
 		}
 		return dataExp, nil
 
 	case config.S3Exporter:
-		dataExp.Exporter = &ffexporter.S3{
+		dataExp.Exporter = &s3exporter.Exporter{
 			Bucket:      c.Bucket,
 			Format:      c.Format,
 			S3Path:      c.Path,
@@ -144,7 +158,7 @@ func initExporter(c *config.ExporterConf) (ffclient.DataExporter, error) {
 		return dataExp, nil
 
 	case config.GoogleStorageExporter:
-		dataExp.Exporter = &ffexporter.GoogleCloudStorage{
+		dataExp.Exporter = &gcstorageexporter.Exporter{
 			Bucket:      c.Bucket,
 			Format:      c.Format,
 			Path:        c.Path,
@@ -158,17 +172,17 @@ func initExporter(c *config.ExporterConf) (ffclient.DataExporter, error) {
 	}
 }
 
-func initNotifier(c []config.NotifierConf) ([]ffclient.NotifierConfig, error) {
-	var notifiers []ffclient.NotifierConfig
+func initNotifier(c []config.NotifierConf) ([]notifier.Notifier, error) {
+	var notifiers []notifier.Notifier
 
 	for _, cNotif := range c {
 		switch cNotif.Kind {
 		case config.SlackNotifier:
-			notifiers = append(notifiers, &ffclient.SlackNotifier{SlackWebhookURL: cNotif.SlackWebhookURL})
+			notifiers = append(notifiers, &slacknotifier.Notifier{SlackWebhookURL: cNotif.SlackWebhookURL})
 
 		case config.WebhookNotifier:
 			notifiers = append(notifiers,
-				&ffclient.WebhookConfig{Secret: cNotif.Secret, EndpointURL: cNotif.EndpointURL, Meta: cNotif.Meta},
+				&webhooknotifier.Notifier{Secret: cNotif.Secret, EndpointURL: cNotif.EndpointURL, Meta: cNotif.Meta},
 			)
 
 		default:

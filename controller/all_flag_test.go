@@ -6,7 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	ffclient "github.com/thomaspoignant/go-feature-flag"
 	"github.com/thomaspoignant/go-feature-flag-relay-proxy/controller"
-	"github.com/thomaspoignant/go-feature-flag/ffexporter"
+	"github.com/thomaspoignant/go-feature-flag/exporter/logsexporter"
+	"github.com/thomaspoignant/go-feature-flag/retriever/fileretriever"
 	"io"
 	"io/ioutil"
 	"log"
@@ -81,13 +82,13 @@ func Test_all_flag_Handler(t *testing.T) {
 				PollingInterval: 10 * time.Second,
 				Logger:          log.New(os.Stdout, "", 0),
 				Context:         context.Background(),
-				Retriever: &ffclient.FileRetriever{
+				Retriever: &fileretriever.Retriever{
 					Path: tt.args.configFlagsLocation,
 				},
 				DataExporter: ffclient.DataExporter{
 					FlushInterval:    10 * time.Second,
 					MaxEventInMemory: 10000,
-					Exporter:         &ffexporter.Log{},
+					Exporter:         &logsexporter.Exporter{},
 				},
 			})
 			defer goFF.Close()
