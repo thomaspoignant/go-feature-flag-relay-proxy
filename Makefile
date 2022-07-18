@@ -37,7 +37,7 @@ watch: ## Run the code with cosmtrek/air to have automatic reload on changes
 
 swagger: ## Build swagger documentation
 	$(GOCMD) install github.com/swaggo/swag/cmd/swag@latest
-	swag init --parseDependency --parseDepth 2
+	swag init
 
 ## Test:
 test: ## Run the tests of the project

@@ -97,13 +97,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/echo.HTTPError"
+                            "$ref": "#/definitions/modeldocs.HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/echo.HTTPError"
+                            "$ref": "#/definitions/modeldocs.HTTPError"
                         }
                     }
                 }
@@ -150,13 +150,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/echo.HTTPError"
+                            "$ref": "#/definitions/modeldocs.HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/echo.HTTPError"
+                            "$ref": "#/definitions/modeldocs.HTTPError"
                         }
                     }
                 }
@@ -164,12 +164,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "echo.HTTPError": {
-            "type": "object",
-            "properties": {
-                "message": {}
-            }
-        },
         "model.FlagEval": {
             "type": "object",
             "properties": {
@@ -240,6 +234,16 @@ const docTemplate = `{
         "modeldocs.FlagState": {
             "type": "object",
             "properties": {
+                "errorCode": {
+                    "description": "ErrorCode In cases of abnormal execution indicate an error",
+                    "type": "string",
+                    "example": "FLAG_NOT_FOUND"
+                },
+                "reason": {
+                    "description": "Reason indicates the semantic reason for the returned flag value.",
+                    "type": "string",
+                    "example": "TARGETING_MATCH"
+                },
                 "timestamp": {
                     "description": "Timestamp is the time when the flag was evaluated.",
                     "type": "integer",
@@ -258,6 +262,12 @@ const docTemplate = `{
                     "type": "string",
                     "example": "variation-A"
                 }
+            }
+        },
+        "modeldocs.HTTPError": {
+            "type": "object",
+            "properties": {
+                "message": {}
             }
         }
     }

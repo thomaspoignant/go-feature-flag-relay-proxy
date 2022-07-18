@@ -25,4 +25,10 @@ type FlagState struct {
 	// TrackEvents this flag is trackable.
 	TrackEvents bool `json:"trackEvents" example:"false"`
 	Failed      bool `json:"-"`
+
+	// ErrorCode In cases of abnormal execution indicate an error
+	ErrorCode string `json:"errorCode" example:"FLAG_NOT_FOUND"`
+
+	// Reason indicates the semantic reason for the returned flag value.
+	Reason string `json:"reason" example:"TARGETING_MATCH"`
 }
