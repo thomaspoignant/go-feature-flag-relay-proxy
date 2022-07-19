@@ -5,5 +5,7 @@
     "test": "test"
   },
   "variationType": "Default",
-  "version": 0
+  "version": 0,
+  "reason":"DEFAULT",
+  "errorCode":""
 }

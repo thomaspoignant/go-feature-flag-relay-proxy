@@ -1,5 +1,7 @@
 {
-  "failed": false,
+  "errorCode":"",
+  "failed":false,
+  "reason":"SPLIT",
   "trackEvents": true,
   "value": {
     "test3": "test"

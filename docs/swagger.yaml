@@ -1,9 +1,5 @@
 basePath: /
 definitions:
-  echo.HTTPError:
-    properties:
-      message: {}
-    type: object
   model.FlagEval:
     properties:
       value: {}
@@ -55,6 +51,14 @@ definitions:
     type: object
   modeldocs.FlagState:
     properties:
+      errorCode:
+        description: ErrorCode In cases of abnormal execution indicate an error
+        example: FLAG_NOT_FOUND
+        type: string
+      reason:
+        description: Reason indicates the semantic reason for the returned flag value.
+        example: TARGETING_MATCH
+        type: string
       timestamp:
         description: Timestamp is the time when the flag was evaluated.
         example: 1652113076
@@ -70,6 +74,10 @@ definitions:
           value.
         example: variation-A
         type: string
+    type: object
+  modeldocs.HTTPError:
+    properties:
+      message: {}
     type: object
 info:
   contact:
@@ -136,11 +144,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/echo.HTTPError'
+            $ref: '#/definitions/modeldocs.HTTPError'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/echo.HTTPError'
+            $ref: '#/definitions/modeldocs.HTTPError'
       summary: allflags returns all the flag for a specific user.
       tags:
       - flags
@@ -175,11 +183,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/echo.HTTPError'
+            $ref: '#/definitions/modeldocs.HTTPError'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/echo.HTTPError'
+            $ref: '#/definitions/modeldocs.HTTPError'
       summary: Evaluate the users with the corresponding flag and return the value
         for the user.
       tags:
