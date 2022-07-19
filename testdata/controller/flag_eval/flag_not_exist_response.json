@@ -1,5 +1,7 @@
 {
-  "failed": true,
+  "errorCode":"FLAG_NOT_FOUND",
+  "failed":true,
+  "reason":"ERROR",
   "trackEvents": true,
   "value": "not exist flag value",
   "variationType": "SdkDefault",

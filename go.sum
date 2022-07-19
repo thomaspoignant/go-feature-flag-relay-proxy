@@ -406,8 +406,8 @@ github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe/go.mod h1:lKJPbtWzJ9J
 github.com/swaggo/swag v1.8.1/go.mod h1:ugemnJsPZm/kRwFUnzBlbHRd0JY9zE1M4F+uy2pAaPQ=
 github.com/swaggo/swag v1.8.3 h1:3pZSSCQ//gAH88lfmxM3Cd1+JCsxV8Md6f36b9hrZ5s=
 github.com/swaggo/swag v1.8.3/go.mod h1:jMLeXOOmYyjk8PvHTsXBdrubsNd9gUJTTCzL5iBnseg=
-github.com/thomaspoignant/go-feature-flag v0.27.0 h1:NuvjVRRH7kkavyVY0NO2Nl+dLWI45DU9iCdpu916lSM=
-github.com/thomaspoignant/go-feature-flag v0.27.0/go.mod h1:jeYNUrwdma2NIZeb/CSdRve6NBMgcGP+ehe3YC2coNI=
+github.com/thomaspoignant/go-feature-flag v0.27.1 h1:HcXKbVf9+VE4b91VPPqbpD0WR0YH53XxCY6rp6/MAl0=
+github.com/thomaspoignant/go-feature-flag v0.27.1/go.mod h1:jeYNUrwdma2NIZeb/CSdRve6NBMgcGP+ehe3YC2coNI=
 github.com/urfave/cli/v2 v2.3.0/go.mod h1:LJmUH05zAU44vOAcrfzZQKsZbVcdbOG8rtL3/XcUArI=
 github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=

@@ -3,5 +3,7 @@
   "trackEvents": true,
   "value": false,
   "variationType": "Default",
-  "version": 0
+  "version": 0,
+  "errorCode":"",
+  "reason":"DEFAULT"
 }
