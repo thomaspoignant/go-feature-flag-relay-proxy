@@ -11,7 +11,7 @@ require (
 	github.com/swaggo/echo-swagger v1.3.4
 	github.com/swaggo/swag v1.8.3
 	github.com/thomaspoignant/go-feature-flag v0.27.2
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.23.0
 	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
 	k8s.io/client-go v0.25.2
 )
