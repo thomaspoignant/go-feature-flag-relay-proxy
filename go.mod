@@ -7,7 +7,7 @@ require (
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.13.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/swaggo/echo-swagger v1.3.4
 	github.com/swaggo/swag v1.8.3
 	github.com/thomaspoignant/go-feature-flag v0.28.0
