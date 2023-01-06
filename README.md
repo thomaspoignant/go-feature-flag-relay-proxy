@@ -1,4 +1,8 @@
+⚠️ ⚠️ ⚠️ This repo is not used anymore. The **relay proxy** has been moved into the main repository for GO Feature Flag in v1.0.0 and is now available directly in the main repository [thomaspoignant/go-feature-flag](https://github.com/thomaspoignant/go-feature-flag) ⚠️ ⚠️ ⚠️
+
+
 # GO feature flag relay proxy
+
 <p align="center">
   <img width="250" height="238" src="logo.png" alt="go-feature-flag logo" />
 </p>
